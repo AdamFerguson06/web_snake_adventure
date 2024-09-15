@@ -9,7 +9,6 @@ const tileCount = canvas.width / gridSize;
 
 let snake = [{ x: 10, y: 10 }];
 let food = {};
-let obstacles = [];
 let dx = 0;
 let dy = 0;
 let score = 0;
@@ -32,7 +31,6 @@ const difficultySpeeds = {
 function startGame() {
     snake = [{ x: 10, y: 10 }];
     createFood();
-    createObstacles();
     dx = 0;
     dy = 0;
     score = 0;
@@ -52,40 +50,16 @@ function updateDifficulty() {
 }
 
 function createFood() {
-    do {
-        food = {
-            x: Math.floor(Math.random() * tileCount),
-            y: Math.floor(Math.random() * tileCount)
-        };
-    } while (isPositionOccupied(food));
-}
-
-function createObstacles() {
-    obstacles = [];
-    const obstacleCount = 10;
-    for (let i = 0; i < obstacleCount; i++) {
-        let obstacle;
-        do {
-            obstacle = {
-                x: Math.floor(Math.random() * tileCount),
-                y: Math.floor(Math.random() * tileCount)
-            };
-        } while (isPositionOccupied(obstacle));
-        obstacles.push(obstacle);
-    }
-}
-
-function isPositionOccupied(position) {
-    return snake.some(segment => segment.x === position.x && segment.y === position.y) ||
-           obstacles.some(obs => obs.x === position.x && obs.y === position.y) ||
-           (food.x === position.x && food.y === position.y);
+    food = {
+        x: Math.floor(Math.random() * tileCount),
+        y: Math.floor(Math.random() * tileCount)
+    };
 }
 
 function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawSnake();
     drawFood();
-    drawObstacles();
 }
 
 function drawSnake() {
@@ -98,13 +72,6 @@ function drawSnake() {
 function drawFood() {
     ctx.fillStyle = 'red';
     ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
-}
-
-function drawObstacles() {
-    ctx.fillStyle = 'gray';
-    obstacles.forEach(obstacle => {
-        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize - 2, gridSize - 2);
-    });
 }
 
 function updateDirection() {
@@ -144,8 +111,7 @@ function checkCollision() {
     if (
         head.x < 0 || head.x >= tileCount ||
         head.y < 0 || head.y >= tileCount ||
-        snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y) ||
-        obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)
+        snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)
     ) {
         gameOver = true;
         gameOverSound.play();
@@ -188,6 +154,5 @@ restartBtn.addEventListener('click', startGame);
 difficultySelect.addEventListener('change', updateDifficulty);
 
 createFood();
-createObstacles();
 updateDifficulty();
 main();
