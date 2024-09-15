@@ -16,6 +16,15 @@ h1 {
     color: #333;
 }
 
+.game-controls {
+    margin-bottom: 10px;
+}
+
+#difficulty {
+    font-size: 16px;
+    padding: 5px 10px;
+}
+
 canvas {
     border: 2px solid #333;
     background-color: #fff;

@@ -2,6 +2,7 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const scoreElement = document.getElementById('score');
 const restartBtn = document.getElementById('restartBtn');
+const difficultySelect = document.getElementById('difficulty');
 
 const gridSize = 20;
 const tileCount = canvas.width / gridSize;
@@ -13,13 +14,19 @@ let dy = 0;
 let score = 0;
 let gameOver = false;
 let lastMoveTime = 0;
-const moveInterval = 100; // Minimum time between moves in milliseconds
+let moveInterval = 100; // Default move interval (medium difficulty)
 const directionQueue = [];
-const directionCooldown = 50; // Cooldown period between direction changes in milliseconds
+const directionCooldown = 50;
 let lastDirectionChangeTime = 0;
 
 const eatSound = new Audio('/static/audio/eat.mp3');
 const gameOverSound = new Audio('/static/audio/gameover.mp3');
+
+const difficultySpeeds = {
+    easy: 150,
+    medium: 100,
+    hard: 50
+};
 
 function startGame() {
     snake = [{ x: 10, y: 10 }];
@@ -33,7 +40,13 @@ function startGame() {
     lastMoveTime = 0;
     lastDirectionChangeTime = 0;
     directionQueue.length = 0;
+    updateDifficulty();
     main();
+}
+
+function updateDifficulty() {
+    const difficulty = difficultySelect.value;
+    moveInterval = difficultySpeeds[difficulty];
 }
 
 function createFood() {
@@ -138,6 +151,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 restartBtn.addEventListener('click', startGame);
+difficultySelect.addEventListener('change', updateDifficulty);
 
 createFood();
+updateDifficulty();
 main();
