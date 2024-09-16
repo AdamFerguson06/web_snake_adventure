@@ -3,6 +3,10 @@ const ctx = canvas.getContext('2d');
 const scoreElement = document.getElementById('score');
 const restartBtn = document.getElementById('restartBtn');
 const difficultySelect = document.getElementById('difficulty');
+const gameModeSelect = document.getElementById('gameMode');
+const difficultyLabel = document.getElementById('difficultyLabel');
+const gameSpeedSelect = document.getElementById('gameSpeed');
+const difficultyGroup = document.getElementById('difficultyGroup');
 
 const gridSize = 20;
 const tileCount = canvas.width / gridSize;
@@ -28,9 +32,65 @@ const difficultySpeeds = {
     hard: 50
 };
 
+const obstacles = [];
+const obstacleCount = {
+    easy: 5,
+    medium: 10,
+    hard: 15
+};
+
+const gameSpeeds = {
+    slow: 150,
+    medium: 100,
+    fast: 50
+};
+
+function updateDifficultyLabel() {
+    if (gameModeSelect.value === 'noObstacles') {
+        difficultyLabel.textContent = 'Game Speed:';
+    } else {
+        difficultyLabel.textContent = 'Difficulty:';
+    }
+}
+
+function updateGameControls() {
+    if (gameModeSelect.value === 'noObstacles') {
+        difficultyGroup.style.display = 'none';
+    } else {
+        difficultyGroup.style.display = 'block';
+    }
+}
+
+function createObstacles() {
+    obstacles.length = 0;
+    if (gameModeSelect.value === 'withObstacles') {
+        const count = obstacleCount[difficultySelect.value];
+        while (obstacles.length < count) {
+            const obstacle = {
+                x: Math.floor(Math.random() * tileCount),
+                y: Math.floor(Math.random() * tileCount)
+            };
+            if (
+                !snake.some(segment => segment.x === obstacle.x && segment.y === obstacle.y) &&
+                !(food.x === obstacle.x && food.y === obstacle.y)
+            ) {
+                obstacles.push(obstacle);
+            }
+        }
+    }
+}
+
+function drawObstacles() {
+    ctx.fillStyle = 'gray';
+    obstacles.forEach(obstacle => {
+        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize - 2, gridSize - 2);
+    });
+}
+
 function startGame() {
     snake = [{ x: 10, y: 10 }];
     createFood();
+    createObstacles();
     dx = 0;
     dy = 0;
     score = 0;
@@ -40,13 +100,19 @@ function startGame() {
     lastMoveTime = 0;
     lastDirectionChangeTime = 0;
     directionQueue.length = 0;
-    updateDifficulty();
+    updateGameSpeed();
+    updateGameControls();
     main();
 }
 
 function updateDifficulty() {
     const difficulty = difficultySelect.value;
     moveInterval = difficultySpeeds[difficulty];
+    createObstacles();
+}
+
+function updateGameSpeed() {
+    moveInterval = gameSpeeds[gameSpeedSelect.value];
 }
 
 function createFood() {
@@ -60,6 +126,7 @@ function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawSnake();
     drawFood();
+    drawObstacles();
 }
 
 function drawSnake() {
@@ -82,7 +149,6 @@ function updateDirection() {
             (newDirection.dx === 0 && newDirection.dy === -dy) ||
             (newDirection.dy === 0 && newDirection.dx === -dx)
         ) {
-            // Prevent reversing direction
             return;
         }
         dx = newDirection.dx;
@@ -111,7 +177,8 @@ function checkCollision() {
     if (
         head.x < 0 || head.x >= tileCount ||
         head.y < 0 || head.y >= tileCount ||
-        snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)
+        snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y) ||
+        obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)
     ) {
         gameOver = true;
         gameOverSound.play();
@@ -151,8 +218,14 @@ document.addEventListener('keydown', (e) => {
 });
 
 restartBtn.addEventListener('click', startGame);
-difficultySelect.addEventListener('change', updateDifficulty);
+gameSpeedSelect.addEventListener('change', updateGameSpeed);
+difficultySelect.addEventListener('change', createObstacles);
+gameModeSelect.addEventListener('change', () => {
+    updateGameControls();
+    startGame();
+});
 
 createFood();
-updateDifficulty();
+updateGameSpeed();
+updateGameControls();
 main();

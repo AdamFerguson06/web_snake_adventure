@@ -10,12 +10,29 @@
     <div class="game-container">
         <h1>Snake Game</h1>
         <div class="game-controls">
-            <label for="difficulty">Difficulty:</label>
-            <select id="difficulty">
-                <option value="easy">Easy</option>
-                <option value="medium" selected>Medium</option>
-                <option value="hard">Hard</option>
-            </select>
+            <div class="control-group">
+                <label for="gameMode">Game Mode:</label>
+                <select id="gameMode">
+                    <option value="noObstacles">No Obstacles</option>
+                    <option value="withObstacles">With Obstacles</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="gameSpeed">Game Speed:</label>
+                <select id="gameSpeed">
+                    <option value="slow">Slow</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="fast">Fast</option>
+                </select>
+            </div>
+            <div class="control-group" id="difficultyGroup">
+                <label for="difficulty">Difficulty:</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
         </div>
         <canvas id="gameCanvas" width="400" height="400"></canvas>
         <div class="game-info">
