@@ -16,28 +16,49 @@ h1 {
     color: #333;
 }
 
-.game-controls {
+.game-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.left-panel, .right-panel {
+    width: 200px;
+}
+
+.center-panel {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
 }
 
-.control-group {
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.control-group, .user-input {
     margin-bottom: 10px;
     width: 100%;
-    max-width: 200px;
 }
 
-.control-group label {
+.control-group label, .user-input label {
     display: block;
     margin-bottom: 5px;
+    text-align: left;
 }
 
-.control-group select {
+.control-group select, .user-input input {
     width: 100%;
     padding: 5px;
     font-size: 16px;
+    box-sizing: border-box;
+    height: 34px; /* Standardize height */
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 canvas {
@@ -49,7 +70,7 @@ canvas {
     margin-top: 20px;
 }
 
-#restartBtn {
+#startBtn, #restartBtn {
     font-size: 16px;
     padding: 10px 20px;
     background-color: #4CAF50;
@@ -59,10 +80,18 @@ canvas {
     transition: background-color 0.3s;
 }
 
-#restartBtn:hover {
+#startBtn:hover, #restartBtn:hover {
     background-color: #45a049;
 }
 
-#difficultyGroup {
-    display: none; /* Initially hidden, will be shown when "With Obstacles" is selected */
+.leaderboard {
+    text-align: left;
+}
+
+.leaderboard h2 {
+    margin-top: 0;
+}
+
+#leaderboardList {
+    padding-left: 20px;
 }

@@ -9,35 +9,52 @@
 <body>
     <div class="game-container">
         <h1>Snake Game</h1>
-        <div class="game-controls">
-            <div class="control-group">
-                <label for="gameMode">Game Mode:</label>
-                <select id="gameMode">
-                    <option value="noObstacles">No Obstacles</option>
-                    <option value="withObstacles">With Obstacles</option>
-                </select>
+        <div class="game-layout">
+            <div class="left-panel">
+                <div class="game-controls">
+                    <label for="playerName" id="userName">Username:</label>
+                    <input type="text" id="playerName" placeholder="Enter your name">
+                </div>
+                <div class="game-controls">
+                    <div class="control-group">
+                        <label for="gameMode">Game Mode:</label>
+                        <select id="gameMode">
+                            <option value="noObstacles">No Obstacles</option>
+                            <option value="withObstacles">With Obstacles</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="gameSpeed">Game Speed:</label>
+                        <select id="gameSpeed">
+                            <option value="slow">Slow</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="fast">Fast</option>
+                        </select>
+                    </div>
+                    <div class="control-group" id="difficultyGroup">
+                        <label for="difficulty">Difficulty:</label>
+                        <select id="difficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="control-group">
-                <label for="gameSpeed">Game Speed:</label>
-                <select id="gameSpeed">
-                    <option value="slow">Slow</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="fast">Fast</option>
-                </select>
+            <div class="center-panel">
+                <canvas id="gameCanvas" width="400" height="400"></canvas>
+                <div class="game-info">
+                    <p>Score: <span id="score">0</span></p>
+                    <button id="startBtn">Start Game</button>
+                    <button id="restartBtn" style="display: none;">Restart</button>
+                </div>
             </div>
-            <div class="control-group" id="difficultyGroup">
-                <label for="difficulty">Difficulty:</label>
-                <select id="difficulty">
-                    <option value="easy">Easy</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="hard">Hard</option>
-                </select>
+            <div class="right-panel">
+                <div class="leaderboard">
+                    <h2>Leaderboard</h2>
+                    <ol id="leaderboardList"></ol>
+                </div>
             </div>
-        </div>
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
-        <div class="game-info">
-            <p>Score: <span id="score">0</span></p>
-            <button id="restartBtn" style="display: none;">Restart</button>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/game.js') }}"></script>

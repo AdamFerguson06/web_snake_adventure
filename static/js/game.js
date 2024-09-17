@@ -7,6 +7,9 @@ const gameModeSelect = document.getElementById('gameMode');
 const difficultyLabel = document.getElementById('difficultyLabel');
 const gameSpeedSelect = document.getElementById('gameSpeed');
 const difficultyGroup = document.getElementById('difficultyGroup');
+const playerNameInput = document.getElementById('playerName');
+const leaderboardList = document.getElementById('leaderboardList');
+const startBtn = document.getElementById('startBtn');
 
 const gridSize = 20;
 const tileCount = canvas.width / gridSize;
@@ -18,7 +21,7 @@ let dy = 0;
 let score = 0;
 let gameOver = false;
 let lastMoveTime = 0;
-let moveInterval = 100; // Default move interval (medium difficulty)
+let moveInterval = 100;
 const directionQueue = [];
 const directionCooldown = 50;
 let lastDirectionChangeTime = 0;
@@ -44,6 +47,9 @@ const gameSpeeds = {
     medium: 100,
     fast: 50
 };
+
+let leaderboard = [];
+let currentPlayer = '';
 
 function updateDifficultyLabel() {
     if (gameModeSelect.value === 'noObstacles') {
@@ -88,6 +94,10 @@ function drawObstacles() {
 }
 
 function startGame() {
+    if (!currentPlayer) {
+        alert('Please enter your name and press Enter before starting the game.');
+        return;
+    }
     snake = [{ x: 10, y: 10 }];
     createFood();
     createObstacles();
@@ -96,6 +106,7 @@ function startGame() {
     score = 0;
     gameOver = false;
     scoreElement.textContent = score;
+    startBtn.style.display = 'none';
     restartBtn.style.display = 'none';
     lastMoveTime = 0;
     lastDirectionChangeTime = 0;
@@ -182,7 +193,9 @@ function checkCollision() {
     ) {
         gameOver = true;
         gameOverSound.play();
+        startBtn.style.display = 'inline-block';
         restartBtn.style.display = 'inline-block';
+        updateLeaderboard();
     }
 }
 
@@ -225,7 +238,38 @@ gameModeSelect.addEventListener('change', () => {
     startGame();
 });
 
+function updateLeaderboard() {
+    if (currentPlayer) {
+        leaderboard.push({ name: currentPlayer, score: score });
+        leaderboard.sort((a, b) => b.score - a.score);
+        leaderboard = leaderboard.slice(0, 10); // Keep only top 10 scores
+        displayLeaderboard();
+    }
+}
+
+function displayLeaderboard() {
+    leaderboardList.innerHTML = '';
+    leaderboard.forEach(entry => {
+        const li = document.createElement('li');
+        li.textContent = `${entry.name}: ${entry.score}`;
+        leaderboardList.appendChild(li);
+    });
+}
+
+playerNameInput.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+        const newPlayer = playerNameInput.value.trim();
+        if (newPlayer) {
+            currentPlayer = newPlayer;
+            alert(`Player set to: ${currentPlayer}`);
+            startBtn.style.display = 'inline-block';
+        } else {
+            alert('Please enter a valid name.');
+        }
+    }
+});
+
 createFood();
 updateGameSpeed();
 updateGameControls();
-main();
+displayLeaderboard();
