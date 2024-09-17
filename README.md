@@ -23,7 +23,7 @@ Provide a brief overview of your game, its objectives, and key features.
    ```
 4. Start the game:
    ```bash
-   npm start
+   python main.py
    ```
 
 ## How to Play
